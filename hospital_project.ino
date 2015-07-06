@@ -42,9 +42,9 @@ void loop() {
   //int button_value = !digitalRead(switch_pin); //for the substitute switch
   int button_value = digitalRead(switch_pin); //for the proper switch
 
-  int pot_value = analogRead(0);
+  int pot_value = analogRead(A0);
 
-  threshold_time = map(pot_value, 0, 1023, 200, 2000);
+  threshold_time = map(pot_value, 0, 1023, 2000, 200);
   threshold_time /= 100;
   threshold_time *= 100; //round to nearest 100;
   
@@ -53,7 +53,7 @@ void loop() {
            calibrated_time = millis();     
          backlightOn();  
   } else if (millis() - calibrated_time > screen_timeout) {
-           backlightOff();       
+          backlightOff();   
   }
   
   prev_threshold_time = threshold_time;
@@ -163,7 +163,8 @@ void clearLCD() {
 
 void backlightOn() { //turns on the backlight
   LCD.write(0x7C);   //command flag for backlight stuff
-  LCD.write(157);    //light level.
+  LCD.write(157);    //full light level
+  //LCD.write(142);
   delay(10);
 }
 
@@ -171,6 +172,12 @@ void backlightOff() { //turns off the backlight
   LCD.write(0x7C);   //command flag for backlight stuff
   LCD.write(128);     //light level for off.
   delay(10);
+}
+
+void backlightDim() {
+   LCD.write(0x7C);
+   LCD.write(138);
+   delay(10);   
 }
 
 void serCommand() {  //a general function to call the command flag for issuing all other commands
